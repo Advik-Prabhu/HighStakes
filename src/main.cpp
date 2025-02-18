@@ -9,6 +9,7 @@
 
 //Version     Description
 //v2025-02-17 Initalizing versioning 
+//v2025-02-18 Created Move Selection
 
 #include "vex.h"
 #include <iostream>
@@ -44,7 +45,7 @@ int fastdrivetrainspeed=100;
 
 bool controllerMove = true;
 bool doinkerOpen = false;
-
+bool PID =false;
 
 float pController,iController,integral,dController,derivitive,targetDistance,prevError,error,threshold,distanceTravel;
 
@@ -93,7 +94,7 @@ rotation Rotation = rotation(PORT18, true);
 //Type=2 Red Right, Slot 3
 //Type=3 Red Left, Slot 4
 //Type=4 Skills, Slot 6
-//Type=5 PID Test, Slot 7
+//Type=5 move selection Test, Slot 7
 
 
 int type = 5;
@@ -223,7 +224,17 @@ while (fabs(error)>threshold)
 Drive.stop();
 }
 
-
+void move(float distance){
+  if (PID)
+  {
+    movePID(distance,0.1,150);
+  }
+  else
+  {
+    Drive.driveFor(distance,inches);
+  }
+  
+}
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -328,18 +339,7 @@ if (type==3)
   Drive.driveFor(forward,28,inches);
 
 
-
-
-
 }
-
-
-
-
-
-
-
-
 if (type==4)
 {
     //TODO fix scoring after long stretch
@@ -500,7 +500,7 @@ if (type==4)
 if (type==5)
 {
   //Test PID routine
-  movePID(60,0.1,150);
+  move(20);
 }
 
 
