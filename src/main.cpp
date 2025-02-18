@@ -49,8 +49,8 @@ bool doinkerOpen = false;
 float pController,iController,integral,dController,derivitive,targetDistance,prevError,error,threshold,distanceTravel;
 
 
-int dT,tick,maxSpeed,speed;
-
+int tick,maxSpeed,speed;
+int dT =20;
 
 // define your global instances of motors and other devices here
 motor Frontleftmotor = motor(PORT11, false);//Updated
@@ -83,7 +83,7 @@ pneumatics doinker = pneumatics(Brain.ThreeWirePort.G);
 
 // Construct a Rotation Sensor "Rotation" with the
 // rotation class.
-rotation Rotation = rotation(PORT18, false);
+rotation Rotation = rotation(PORT18, true);
 
 
 
@@ -499,7 +499,8 @@ if (type==4)
 }
 if (type==5)
 {
- 
+  //Test PID routine
+  movePID(60,0.1,150);
 }
 
 
