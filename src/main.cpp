@@ -7,9 +7,9 @@
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
-//Version     Description
-//v2025-02-17 Initalizing versioning 
-//v2025-02-18 Created Move Selection
+//Version            Description
+//v2025-02-17-01     Initalizing versioning 
+//v2025-02-18-01     Created Move Selection
 
 #include "vex.h"
 #include <iostream>
@@ -94,7 +94,7 @@ rotation Rotation = rotation(PORT18, true);
 //Type=2 Red Right, Slot 3
 //Type=3 Red Left, Slot 4
 //Type=4 Skills, Slot 6
-//Type=5 move selection Test, Slot 7
+//Type=5 PID Skills
 
 
 int type = 5;
@@ -344,12 +344,7 @@ if (type==4)
 {
     //TODO fix scoring after long stretch
 
-
-
   //wait for gyro initialization
-
-
-
 
   //wait(5000,msec);
 
@@ -499,8 +494,155 @@ if (type==4)
 }
 if (type==5)
 {
-  //Test PID routine
-  move(20);
+  
+    //TODO fix scoring after long stretch
+
+  //wait for gyro initialization
+
+  //wait(5000,msec);
+
+
+
+
+  //setup
+  Drive.setStopping(hold);
+  Controller.Screen.print("Skills is Running");
+  Drive.setDriveVelocity(60,percent);
+  Drive.setTurnVelocity(15,percent);
+  intake.setVelocity(100,percent);
+  conveyer.setVelocity(100,percent);
+  clamp.open();
+  //score preload on alliance
+
+
+
+
+  conveyer.spin(forward);
+  wait(1000,msec);
+  conveyer.stop();
+
+
+
+
+   //Go to stake
+  move(12.5);
+  Drive.turnToHeading(270,degrees);
+  move(-24.5);
+
+
+
+
+  clamp.close();
+
+
+
+
+  //Get ready to score
+  Drive.turnToHeading(0,degrees);
+  intake.spin(reverse);
+  conveyer.spin(forward);
+
+
+
+
+      //Score 4 rings
+      Drive.turnToHeading(0,degrees);
+       move(26);
+
+      Drive.turnToHeading(90,degrees);
+
+      move(26.5);
+      Drive.turnToHeading(180,degrees);
+
+      move(27);
+      wait(2000,msec);
+      conveyer.stop();
+
+      //Drop stake in corner
+      Drive.turnToHeading(310,degrees);
+      intake.stop();
+      move(-14);
+      clamp.open();
+      wait(500,msec);
+      //Go back to line
+      move(14);
+
+
+
+      //Go to other side
+      Drive.setTurnVelocity(10,percent);
+      Drive.setDriveVelocity(50,percent);
+
+    
+      //Long Stretch
+      // heads 70 inches
+
+      std::cout << Inertial.heading(degrees);
+      Drive.turnToHeading(90,degrees);
+      std::cout << Inertial.heading(degrees);
+
+      move(-30);
+
+
+      Drive.turnToHeading(90,degrees);
+      move(-40);
+      
+      //Set speed
+      Drive.setTurnVelocity(15,percent);
+      Drive.setDriveVelocity(60,percent);
+
+
+
+      //Clamp Stake
+      clamp.close();
+
+
+
+      //Get ready to score
+      intake.spin(reverse);
+      conveyer.spin(forward);
+
+
+
+
+      //Score 4 rings
+      Drive.turnToHeading(0,degrees);
+      move(24);
+
+
+
+      Drive.turnToHeading(270,degrees);
+      move(26);
+
+
+      Drive.turnToHeading(180,degrees);
+      move(28);
+
+
+
+      //Drop stake in corner
+      Drive.turnToHeading(50,degrees); //45
+
+
+
+
+       Drive.drive(reverse);
+       wait(1000,msec);
+       Drive.stop();
+         clamp.open();
+
+
+       Drive.drive(forward);
+       wait(750,msec);
+       Drive.stop();
+
+
+
+
+      //Initialize for next attempt
+      Drive.setDriveVelocity(slowdrivetrainspeed,percent);
+      Drive.setTurnVelocity(slowdrivetrainspeed,percent);
+      clamp.open();
 }
 
 
