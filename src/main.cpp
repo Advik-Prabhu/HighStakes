@@ -7,6 +7,8 @@
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
+//Version     Description
+//v2025-02-17 Initalizing versioning 
 
 #include "vex.h"
 #include <iostream>
@@ -115,8 +117,8 @@ void pre_auton(void) {
 
  // All activities that occur before the competition starts
  // Example: clearing encoders, setting servo positions, ...
- Controller.Screen.print("V-25-02-12.00");
- std::cout<< "Version 25-02-12.00"<<"\n";
+ Controller.Screen.print("V-25-02-17.00");
+ std::cout<< "Version 25-02-17.00"<<"\n";
 
 
 conveyer.setVelocity(100,percent);
