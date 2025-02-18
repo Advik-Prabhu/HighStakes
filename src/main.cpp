@@ -148,15 +148,22 @@ Brain.Screen.print("Calibrated");
 void movePID(float distance, float accuracy, int topSpeed){
 
 Rotation.resetPosition();
+
 speed=integral=derivitive=distanceTravel=0;
 prevError=error=targetDistance = distance;
 threshold=accuracy;
 maxSpeed=topSpeed;
 
-//TODO Tune PID
-pController=6;
-iController=0*((float)dT/1000);
-dController=0/((float)dT/1000);
+pController=7;
+iController=2*((float)dT/1000);
+dController=0.1/((float)dT/1000);
+
+
+std::cout<<"Debug Code \n";
+std::cout<<"speed: "<<speed<<integral<<derivitive<<distanceTravel<<"\n";
+std::cout<< "error/distance: "<<prevError<<error<<targetDistance<<distance<<"\n";
+std::cout<<"threshold: "<<threshold<<"\n";
+std::cout<<"max speed: "<<maxSpeed<<"\n";
 
 while (fabs(error)>threshold)
 {
@@ -172,7 +179,7 @@ while (fabs(error)>threshold)
   integral=integral+error;
 
    //If error is to large
-  if (error>20){
+  if (fabs(error)>6){
    integral=0;
   }
   //Prevent occilations
@@ -182,7 +189,6 @@ while (fabs(error)>threshold)
   //If error so large it is unusable
   if ((integral*iController)>100){
     integral = 100;
-  
   }
 
   //Derivitive
@@ -203,12 +209,12 @@ while (fabs(error)>threshold)
 
   //Move Robot
   Drive.drive(forward,speed,rpm);
-  //Drive.drive(forward,10,rpm);
 
-
-   std::cout << tick << ","<< speed <<","<<distanceTravel<< "," <<(error*pController)<<","<< (integral*iController)<<","<<(derivitive*dController)<<"\n";
-
-
+    if (tick%1==0)
+    {
+       std::cout << tick << ","<< speed <<","<<distanceTravel<< "," <<(error*pController)<<","<< (integral*iController)<<","<<(derivitive*dController)<<","<<angle<<"\n";
+    }
+    
   tick+=1;
  wait(dT, msec); // Sleep the task for a short amount of time to
                  // prevent wasted resources.
@@ -216,7 +222,6 @@ while (fabs(error)>threshold)
 // Stop Drivetrain.
 Drive.stop();
 }
-
 
 
 
