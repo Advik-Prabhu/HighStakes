@@ -45,7 +45,7 @@ int fastdrivetrainspeed=100;
 
 bool controllerMove = true;
 bool doinkerOpen = false;
-bool PID =false;
+bool PID =true;
 
 float pController,iController,integral,dController,derivitive,targetDistance,prevError,error,threshold,distanceTravel;
 
@@ -508,7 +508,8 @@ if (type==5)
   Drive.setStopping(hold);
   Controller.Screen.print("Skills is Running");
   Drive.setDriveVelocity(60,percent);
-  Drive.setTurnVelocity(15,percent);
+  Drive.setTurnVelocity(40,percent);
+  Drive.setTurnConstant(0.8);
   intake.setVelocity(100,percent);
   conveyer.setVelocity(100,percent);
   clamp.open();
@@ -520,11 +521,11 @@ if (type==5)
   conveyer.stop();
 
    //Go to stake
-  move(12.5);
+  move(11);
   Drive.turnToHeading(270,degrees);
-  move(-24.5);
-
+  move(-22);
   clamp.close();
+  Drive.driveFor(reverse,2,inches,true);
 
   //Get ready to score
   Drive.turnToHeading(0,degrees);
@@ -533,46 +534,43 @@ if (type==5)
 
       //Score 4 rings
       Drive.turnToHeading(0,degrees);
-       move(26);
+       move(24);
 
       Drive.turnToHeading(90,degrees);
 
-      move(26.5);
+      move(21.5);
       Drive.turnToHeading(180,degrees);
 
-      move(27);
+      move(24);
       wait(2000,msec);
       conveyer.stop();
 
       //Drop stake in corner
       Drive.turnToHeading(310,degrees);
       intake.stop();
+      clamp.open();
       move(-14);
-      clamp.close();
       wait(500,msec);
       //Go back to line
       move(14);
 
       //Go to other side
-      Drive.setTurnVelocity(10,percent);
+      Drive.setTurnVelocity(40,percent);
       Drive.setDriveVelocity(50,percent);
 
     
       //Long Stretch
       // heads 70 inches
 
-      std::cout << Inertial.heading(degrees);
       Drive.turnToHeading(90,degrees);
       std::cout << Inertial.heading(degrees);
-
-      move(-30);
-
-
+      move(-35);
       Drive.turnToHeading(90,degrees);
-      move(-40);
-      
+      std::cout << Inertial.heading(degrees);
+      move(-35);
+
       //Set speed
-      Drive.setTurnVelocity(15,percent);
+      Drive.setTurnVelocity(40,percent);
       Drive.setDriveVelocity(60,percent);
 
 
@@ -587,8 +585,6 @@ if (type==5)
       conveyer.spin(forward);
 
 
-
-
       //Score 4 rings
       Drive.turnToHeading(0,degrees);
       move(24);
@@ -596,7 +592,7 @@ if (type==5)
 
 
       Drive.turnToHeading(270,degrees);
-      move(26);
+      move(21.5);
 
 
       Drive.turnToHeading(180,degrees);
