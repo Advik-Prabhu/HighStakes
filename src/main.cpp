@@ -118,8 +118,8 @@ void pre_auton(void) {
 
  // All activities that occur before the competition starts
  // Example: clearing encoders, setting servo positions, ...
- Controller.Screen.print("V-25-02-17.00");
- std::cout<< "Version 25-02-17.00"<<"\n";
+ Controller.Screen.print("V-25-02-18.00");
+ std::cout<< "Version 25-02-18.00"<<"\n";
 
 
 conveyer.setVelocity(100,percent);
@@ -127,7 +127,7 @@ intake.setVelocity(100,percent);
 
 
 clamp.open();
-doinker.close();
+doinker.open();
 
 
 // Start calibration.
@@ -512,38 +512,24 @@ if (type==5)
   intake.setVelocity(100,percent);
   conveyer.setVelocity(100,percent);
   clamp.open();
+
   //score preload on alliance
-
-
-
 
   conveyer.spin(forward);
   wait(1000,msec);
   conveyer.stop();
-
-
-
 
    //Go to stake
   move(12.5);
   Drive.turnToHeading(270,degrees);
   move(-24.5);
 
-
-
-
   clamp.close();
-
-
-
 
   //Get ready to score
   Drive.turnToHeading(0,degrees);
   intake.spin(reverse);
   conveyer.spin(forward);
-
-
-
 
       //Score 4 rings
       Drive.turnToHeading(0,degrees);
@@ -562,12 +548,10 @@ if (type==5)
       Drive.turnToHeading(310,degrees);
       intake.stop();
       move(-14);
-      clamp.open();
+      clamp.close();
       wait(500,msec);
       //Go back to line
       move(14);
-
-
 
       //Go to other side
       Drive.setTurnVelocity(10,percent);
@@ -726,13 +710,15 @@ void ButtonUpPressed()
   {
     doinker.close();
     doinkerOpen=false;
-
+    std::cout<<"close";
 
   }
   else
   {
-   doinker.open();
-  doinkerOpen=true;
+    doinker.open();
+    doinkerOpen=true;
+    std::cout<<"open";
+
   }
 }
 
