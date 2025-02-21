@@ -10,7 +10,8 @@
 //Version            Description
 //v2025-02-17-01     Initalizing versioning 
 //v2025-02-18-01     Created Move Selection
-//v2025-02-18-01     Created Skills 
+//v2025-02-18-01     Created PID Skills 
+//v2025-02-18-02     Created Left Right Alignment Button
 
 #include "vex.h"
 #include <iostream>
@@ -210,7 +211,7 @@ while (fabs(error)>threshold)
   //Move Robot
   Drive.drive(forward,speed,rpm);
 
-    if (tick%1==0)
+    if (tick%1==1)
     {
        std::cout << tick << ","<< speed <<","<<distanceTravel<< "," <<(error*pController)<<","<< (integral*iController)<<","<<(derivitive*dController)<<","<<angle<<"\n";
     }
@@ -353,9 +354,12 @@ if (type==4)
   //setup
   Drive.setStopping(hold);
   Controller.Screen.print("Skills is Running");
+
   Drive.setDriveVelocity(60,percent);
   Drive.setTurnVelocity(40,percent);
   Drive.setTurnConstant(0.8);
+  Drive.setTurnThreshold(1.0);
+
   intake.setVelocity(100,percent);
   conveyer.setVelocity(100,percent);
   clamp.open();
@@ -366,10 +370,12 @@ if (type==4)
   wait(1000,msec);
   conveyer.stop();
 
-   //Go to stake
+  //Go to stake
   move(11);
   Drive.turnToHeading(270,degrees);
   move(-22);
+
+  //Clamp Stake
   clamp.close();
   Drive.driveFor(reverse,2,inches,true);
 
@@ -394,11 +400,13 @@ if (type==4)
       //Drop stake in corner
       Drive.turnToHeading(310,degrees);
       intake.stop();
+      Drive.driveFor(forward,2,inches);
       clamp.open();
       move(-14);
       wait(500,msec);
+
       //Go back to line
-      move(14);
+      move(12);
 
       //Go to other side
       Drive.setTurnVelocity(40,percent);
@@ -408,33 +416,41 @@ if (type==4)
       //Long Stretch
       // heads 70 inches
 
+      Drive.setTurnThreshold(0.1);
+
       Drive.turnToHeading(90,degrees);
+
       std::cout << Inertial.heading(degrees);
-      move(-35);
-      Drive.turnToHeading(90,degrees);
-      std::cout << Inertial.heading(degrees);
-      move(-35);
+      movePID(-72,0.1,100);
+
+      // Drive.turnToHeading(90,degrees);
+
+      // std::cout << Inertial.heading(degrees);
+      // movePID(-24,0.1,150);
+      
+      // Drive.turnToHeading(90,degrees);
+
+      // std::cout << Inertial.heading(degrees);
+      // movePID(-24,0.1,150);
+
+      Drive.setTurnThreshold(1.0);
+
+      //Clamp Stake
+      clamp.close();
+
+      Drive.driveFor(forward,2,inches,true);
 
       //Set speed
       Drive.setTurnVelocity(40,percent);
       Drive.setDriveVelocity(60,percent);
 
-
-
-      //Clamp Stake
-      clamp.close();
-
-
-
       //Get ready to score
       intake.spin(reverse);
       conveyer.spin(forward);
 
-
       //Score 4 rings
       Drive.turnToHeading(0,degrees);
       move(24);
-
 
 
       Drive.turnToHeading(270,degrees);
@@ -442,14 +458,15 @@ if (type==4)
 
 
       Drive.turnToHeading(180,degrees);
-      move(28);
+      move(29);
 
 
 
       //Drop stake in corner
       Drive.turnToHeading(50,degrees); //45
 
-
+      intake.stop();
+      conveyer.stop();
 
 
        Drive.drive(reverse);
