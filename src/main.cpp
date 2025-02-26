@@ -156,8 +156,8 @@ threshold=accuracy;
 maxSpeed=topSpeed;
 
 pController=7;
-iController=2*((float)dT/1000);
-dController=0.1/((float)dT/1000);
+iController=2 * ((float)dT/1000);// after normalization it is 0.04
+dController=0.1 / ((float)dT/1000);// after normalization it is 5
 
 
 std::cout<<"Debug Code \n";
@@ -211,9 +211,9 @@ while (fabs(error)>threshold)
   //Move Robot
   Drive.drive(forward,speed,rpm);
 
-    if (tick%1==1)
+    if (tick%1==0)
     {
-       std::cout << tick << ","<< speed <<","<<distanceTravel<< "," <<(error*pController)<<","<< (integral*iController)<<","<<(derivitive*dController)<<","<<angle<<"\n";
+      std::cout << tick << ","<< speed << "," << distanceTravel << "," << (error*pController) <<"," << (integral*iController) << "," << (derivitive*dController) << "," << angle << "\n" ;
     }
     
   tick+=1;
@@ -345,8 +345,7 @@ if (type==4)
   
 
   //wait for gyro initialization
-
-  //wait(5000,msec);
+  wait(5000,msec);
 
 
 
@@ -356,8 +355,8 @@ if (type==4)
   Controller.Screen.print("Skills is Running");
 
   Drive.setDriveVelocity(60,percent);
-  Drive.setTurnVelocity(40,percent);
-  Drive.setTurnConstant(0.8);
+  Drive.setTurnVelocity(70,percent);
+  Drive.setTurnConstant(1.0);
   Drive.setTurnThreshold(1.0);
 
   intake.setVelocity(100,percent);
@@ -402,47 +401,41 @@ if (type==4)
       intake.stop();
       Drive.driveFor(forward,2,inches);
       clamp.open();
-      move(-14);
+      move(-15);
       wait(500,msec);
 
       //Go back to line
-      move(12);
-
-      //Go to other side
-      Drive.setTurnVelocity(40,percent);
-      Drive.setDriveVelocity(50,percent);
-
+      move(13);
     
       //Long Stretch
       // heads 70 inches
 
       Drive.setTurnThreshold(0.1);
 
-      Drive.turnToHeading(90,degrees);
+        //Drive.turnToHeading(90,degrees);
+        // std::cout << Inertial.heading(degrees);
+        // movePID(-72,0.1,100);
 
-      std::cout << Inertial.heading(degrees);
-      movePID(-72,0.1,100);
-
-      // Drive.turnToHeading(90,degrees);
-
-      // std::cout << Inertial.heading(degrees);
-      // movePID(-24,0.1,150);
+       Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
+       std::cout << Inertial.heading(degrees);
+       movePID(-23,0.1,150);
       
-      // Drive.turnToHeading(90,degrees);
-
-      // std::cout << Inertial.heading(degrees);
-      // movePID(-24,0.1,150);
+       Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
+       std::cout << Inertial.heading(degrees);
+       movePID(-23,0.1,150);
+      
+       Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
+       std::cout << Inertial.heading(degrees);
+       movePID(-24,0.1,150);
 
       Drive.setTurnThreshold(1.0);
 
       //Clamp Stake
       clamp.close();
 
-      Drive.driveFor(forward,2,inches,true);
+      Drive.driveFor(forward,4,inches,true);
 
-      //Set speed
-      Drive.setTurnVelocity(40,percent);
-      Drive.setDriveVelocity(60,percent);
+ 
 
       //Get ready to score
       intake.spin(reverse);
