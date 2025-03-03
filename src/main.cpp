@@ -12,7 +12,7 @@
 //v2025-02-18-01     Created Move Selection
 //v2025-02-18-01     Created PID Skills 
 //v2025-02-18-02     Created Left Right Alignment Button
-
+//v2025-03-1-02      Added Wall Stakes
 #include "vex.h"
 #include <iostream>
 using namespace vex;
@@ -87,8 +87,7 @@ pneumatics doinker = pneumatics(Brain.ThreeWirePort.G);
 // Construct a Rotation Sensor "Rotation" with the
 // rotation class.
 rotation Rotation = rotation(PORT18, true);
-
-
+motor wallStake = motor(PORT2,ratio36_1,true);
 
 
 //Type=0 Blue Right, Slot 1
@@ -124,7 +123,8 @@ void pre_auton(void) {
 
 conveyer.setVelocity(100,percent);
 intake.setVelocity(100,percent);
-
+wallStake.setVelocity(30,percent);
+wallStake.setStopping(hold);
 
 clamp.open();
 doinker.open();
@@ -227,7 +227,7 @@ Drive.stop();
 void move(float distance){
   if (PID)
   {
-    movePID(distance,0.1,150);
+    movePID(distance,0.1,200);
   }
   else
   {
@@ -254,7 +254,7 @@ void autonomous(void) {
  if (type==0)
 {
    //Sets Speed
-  Drive.setDriveVelocity(60,percent);
+  Drive.setDriveVelocity(100,percent);
   intake.setVelocity(100,percent);
   conveyer.setVelocity(100,percent);
 
@@ -354,8 +354,8 @@ if (type==4)
   Drive.setStopping(hold);
   Controller.Screen.print("Skills is Running");
 
-  Drive.setDriveVelocity(60,percent);
-  Drive.setTurnVelocity(70,percent);
+  Drive.setDriveVelocity(100,percent);
+  Drive.setTurnVelocity(100,percent);
   Drive.setTurnConstant(1.0);
   Drive.setTurnThreshold(1.0);
 
@@ -394,6 +394,9 @@ if (type==4)
 
       move(24);
       wait(2000,msec);
+
+      
+
       conveyer.stop();
 
       //Drop stake in corner
@@ -412,22 +415,28 @@ if (type==4)
 
       Drive.setTurnThreshold(0.1);
 
-        //Drive.turnToHeading(90,degrees);
-        // std::cout << Inertial.heading(degrees);
-        // movePID(-72,0.1,100);
+        Drive.turnToHeading(90,degrees);
+         std::cout << Inertial.heading(degrees);
 
+         Drive.driveFor(reverse,62,inches);
+
+        movePID(-10,0.1,200);
+
+        //movePID(-70,0.1,200);
+      
+      /*
        Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
        std::cout << Inertial.heading(degrees);
        movePID(-23,0.1,150);
-      
+   
        Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
        std::cout << Inertial.heading(degrees);
        movePID(-23,0.1,150);
-      
-       Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
+  
+       Drive.turnToHeading(90,degrees);//Should be 90 but has been tuned at 2/21
        std::cout << Inertial.heading(degrees);
        movePID(-24,0.1,150);
-
+      */
       Drive.setTurnThreshold(1.0);
 
       //Clamp Stake
@@ -444,7 +453,6 @@ if (type==4)
       //Score 4 rings
       Drive.turnToHeading(0,degrees);
       move(24);
-
 
       Drive.turnToHeading(270,degrees);
       move(21.5);
@@ -471,8 +479,6 @@ if (type==4)
        Drive.drive(forward);
        wait(750,msec);
        Drive.stop();
-
-
 
 
       //Initialize for next attempt
@@ -513,13 +519,6 @@ void usercontrol(void) {
    if(controllerMove){
      Drive.arcade(Controller.Axis3.value()*drivetrainspeed/100,Controller.Axis1.value()*drivetrainspeed/100);
    }
-
-
-
-
-
-
-
 
    wait(20, msec); // Sleep the task for a short amount of time to
                    // prevent wasted resources.
@@ -574,18 +573,6 @@ void ButtonUpPressed()
   }
 }
 
-void ButtonBPressed()
-{
-drivetrainspeed=slowdrivetrainspeed;
-}
-
-
-void ButtonXPressed()
-{
-drivetrainspeed=fastdrivetrainspeed;
-}
-
-
 
 
 void ButtonLeftPressed(){
@@ -604,9 +591,20 @@ void ButtonRightPressed(){
   controllerMove=true;
 }
 
+void ButtonXPressed(){
+  // Opens Motor completely
+   wallStake.spinToPosition(160,degrees); // Might need to get tuned
+}
 
+void ButtonYPressed(){
+  //Opens Motor to Pick up ring
+    wallStake.spinToPosition(35,degrees); // Might need to get tuned
+}
+void ButtonBPressed(){
+  //Resets Wallstake
+  wallStake.spinToPosition(0,degrees);
 
-
+}
 
 
 //
@@ -625,11 +623,12 @@ int main() {
  Controller.ButtonUp.pressed(ButtonUpPressed); //Doinker Open/Close
  Controller.ButtonL1.pressed(ButtonL1Pressed);//Clamp Close
  Controller.ButtonL2.pressed(ButtonL2Pressed);// Clamp Open
- Controller.ButtonX.pressed (ButtonXPressed); //Speed Up Robot
- Controller.ButtonB.pressed (ButtonBPressed); //Slow Down Robot
  Controller.ButtonLeft.pressed (ButtonLeftPressed); //Aligns the Robot left
  Controller.ButtonRight.pressed (ButtonRightPressed); //Aligns the robot right
 
+ Controller.ButtonX.pressed(ButtonXPressed); //Scores Wallstake
+ Controller.ButtonY.pressed(ButtonYPressed); //Get Ready to Score Wallstake
+ Controller.ButtonB.pressed(ButtonBPressed); //Resets Wallstake
 
  // Run the pre-autonomous function.
  pre_auton();
