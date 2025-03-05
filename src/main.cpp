@@ -13,6 +13,8 @@
 //v2025-02-18-01     Created PID Skills 
 //v2025-02-18-02     Created Left Right Alignment Button
 //v2025-03-1-02      Added Wall Stakes
+//v2025-03-4-00      Improved Wall Stakes and Finished PID backside
+
 #include "vex.h"
 #include <iostream>
 using namespace vex;
@@ -84,9 +86,9 @@ pneumatics clamp = pneumatics(Brain.ThreeWirePort.H);
 pneumatics doinker = pneumatics(Brain.ThreeWirePort.G);
 
 
-// Construct a Rotation Sensor "Rotation" with the
-// rotation class.
+// Construct a Rotation Sensor for the odometry
 rotation Rotation = rotation(PORT18, true);
+
 motor wallStake = motor(PORT2,ratio36_1,true);
 
 
@@ -95,6 +97,7 @@ motor wallStake = motor(PORT2,ratio36_1,true);
 //Type=2 Red Right, Slot 3
 //Type=3 Red Left, Slot 4
 //Type=4 PID Skills, Slot 6
+//Type=5 Skills Backside, Slot 7
 
 int type = 4;
 
@@ -117,13 +120,13 @@ void pre_auton(void) {
 
  // All activities that occur before the competition starts
  // Example: clearing encoders, setting servo positions, ...
- Controller.Screen.print("V-25-02-18.00");
- std::cout<< "Version 25-02-18.00"<<"\n";
+ Controller.Screen.print("V-25-03-03.09");
+ std::cout<< "Version 25-03-03.09"<<"\n";
 
 
 conveyer.setVelocity(100,percent);
 intake.setVelocity(100,percent);
-wallStake.setVelocity(30,percent);
+wallStake.setVelocity(100,percent);
 wallStake.setStopping(hold);
 
 clamp.open();
@@ -155,9 +158,11 @@ prevError=error=targetDistance = distance;
 threshold=accuracy;
 maxSpeed=topSpeed;
 
-pController=7;
+//PID=7,2,0.1
+
+pController=7; 
 iController=2 * ((float)dT/1000);// after normalization it is 0.04
-dController=0.1 / ((float)dT/1000);// after normalization it is 5
+dController=0.1/ ((float)dT/1000);// after normalization it is 5
 
 
 std::cout<<"Debug Code \n";
@@ -345,7 +350,7 @@ if (type==4)
   
 
   //wait for gyro initialization
-  wait(5000,msec);
+  //wait(5000,msec);
 
 
 
@@ -391,8 +396,8 @@ if (type==4)
 
       move(21.5);
       Drive.turnToHeading(180,degrees);
+      move(26);
 
-      move(24);
       wait(2000,msec);
 
       
@@ -455,7 +460,7 @@ if (type==4)
       move(24);
 
       Drive.turnToHeading(270,degrees);
-      move(21.5);
+      move(23.5);
 
 
       Drive.turnToHeading(180,degrees);
@@ -479,14 +484,46 @@ if (type==4)
        Drive.drive(forward);
        wait(750,msec);
        Drive.stop();
+       Drive.driveFor(8,inches);    
+
+  Drive.turnToHeading(180,degrees);
+   Drive.driveFor(reverse,50,inches);
+
+  Drive.turnToHeading(215,degrees);
+   Drive.driveFor(reverse,60,inches);
+
+  Drive.turnToHeading(130,degrees);
+  Drive.driveFor(reverse,80,inches);
+
+  Drive.driveFor(forward,40,inches);
+
+  Drive.turnToHeading(240,degrees);
+  Drive.driveFor(reverse,200,inches);
 
 
       //Initialize for next attempt
       Drive.setDriveVelocity(slowdrivetrainspeed,percent);
       Drive.setTurnVelocity(slowdrivetrainspeed,percent);
       clamp.open();
-}
 
+
+}
+if (type==5)
+{
+
+    //setup
+  Drive.setStopping(hold);
+  Controller.Screen.print("Skills is Running");
+
+  Drive.setDriveVelocity(100,percent);
+  Drive.setTurnVelocity(100,percent);
+  Drive.setTurnConstant(1.0);
+  Drive.setTurnThreshold(1.0);
+
+  intake.setVelocity(100,percent);
+  conveyer.setVelocity(100,percent);
+
+}
 
 }
 
@@ -593,15 +630,18 @@ void ButtonRightPressed(){
 
 void ButtonXPressed(){
   // Opens Motor completely
+   wallStake.setVelocity(80,percent);
    wallStake.spinToPosition(160,degrees); // Might need to get tuned
 }
 
 void ButtonYPressed(){
   //Opens Motor to Pick up ring
-    wallStake.spinToPosition(35,degrees); // Might need to get tuned
+  wallStake.setVelocity(100,percent);
+    wallStake.spinToPosition(40,degrees); // Might need to get tuned
 }
 void ButtonBPressed(){
   //Resets Wallstake
+  wallStake.setVelocity(60,percent);
   wallStake.spinToPosition(0,degrees);
 
 }
