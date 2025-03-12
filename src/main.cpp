@@ -122,7 +122,7 @@ pneumatics doinker = pneumatics(Brain.ThreeWirePort.G);
 rotation Rotation = rotation(PORT18, true);
 
 
-motor wallStake = motor(PORT2,ratio36_1,true);
+motor wallStake = motor(PORT2,ratio36_1);
 
 
 
@@ -132,7 +132,7 @@ motor wallStake = motor(PORT2,ratio36_1,true);
 //Type=2 Red Right, Slot 3
 //Type=3 Red Left, Slot 4
 //Type=4 PID Skills, Slot 6
-//Type=5 Skills Backside, Slot 7
+//Type=5 PID test, Slot 8
 
 
 int type = 4;
@@ -177,7 +177,7 @@ wallStake.setStopping(hold);
 
 
 clamp.open();
-doinker.open();
+doinker.close();
 
 
 
@@ -213,12 +213,12 @@ threshold=accuracy;
 maxSpeed=topSpeed;
 
 
-//PID=7,2,0.1
 
 
-pController=7;
+
+pController=11;
 iController=2 * ((float)dT/1000);// after normalization it is 0.04
-dController=0.1/ ((float)dT/1000);// after normalization it is 5
+dController=0.3/ ((float)dT/1000);// after normalization it is 10
 
 
 
@@ -228,6 +228,7 @@ std::cout<<"speed: "<<speed<<integral<<derivitive<<distanceTravel<<"\n";
 std::cout<< "error/distance: "<<prevError<<error<<targetDistance<<distance<<"\n";
 std::cout<<"threshold: "<<threshold<<"\n";
 std::cout<<"max speed: "<<maxSpeed<<"\n";
+std::cout<<"PID begin"<<"\n";
 
 
 while (fabs(error)>threshold)
@@ -301,7 +302,7 @@ Drive.stop();
 void move(float distance){
  if (PID)
  {
-   movePID(distance,0.1,200);
+   movePID(distance,0.1,170);
  }
  else
  {
@@ -625,14 +626,8 @@ Drive.setTurnConstant(1.2);
 if (type==4)
 {
 
-
  //wait for gyro initialization
  //wait(5000,msec);
-
-
-
-
-
 
 
 
@@ -642,7 +637,7 @@ if (type==4)
 
 
  Drive.setDriveVelocity(100,percent);
- Drive.setTurnVelocity(100,percent);
+ Drive.setTurnVelocity(90,percent);
  Drive.setTurnConstant(1.0);
  Drive.setTurnThreshold(1.0);
 
@@ -661,9 +656,9 @@ if (type==4)
 
 
  //Go to stake
- move(11);
+ move(10);
  Drive.turnToHeading(270,degrees);
- move(-22);
+ move(-21);
 
 
  //Clamp Stake
@@ -704,7 +699,7 @@ if (type==4)
      intake.stop();
      Drive.driveFor(forward,2,inches);
      clamp.open();
-     move(-15);
+     move(-12);
      wait(500,msec);
 
 
@@ -715,21 +710,13 @@ if (type==4)
      // heads 70 inches
 
 
-     Drive.setTurnThreshold(0.1);
-
-
-       Drive.turnToHeading(90,degrees);
+       Drive.turnToHeading(88,degrees);
         std::cout << Inertial.heading(degrees);
 
 
-        Drive.driveFor(reverse,62,inches);
 
-
-       movePID(-10,0.1,200);
-
-
-       //movePID(-70,0.1,200);
-    
+       movePID(-72,0.1,200);
+       wait(200,msec); // helps the stake to settle down
      /*
       Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
       std::cout << Inertial.heading(degrees);
@@ -742,7 +729,7 @@ if (type==4)
       std::cout << Inertial.heading(degrees);
       movePID(-24,0.1,150);
      */
-     Drive.setTurnThreshold(1.0);
+     //Drive.setTurnThreshold(1.0);
 
 
      //Clamp Stake
@@ -761,57 +748,48 @@ if (type==4)
 
      //Score 4 rings
      Drive.turnToHeading(0,degrees);
-     move(24);
+     move(22); //used to be 24
 
 
      Drive.turnToHeading(270,degrees);
-     move(23.5);
+     move(21.5);//used to be 24
 
 
-
-
-     Drive.turnToHeading(180,degrees);
-     move(29);
-
-
-
-
+     Drive.turnToHeading(179,degrees);
+     move(30);
 
 
      //Drop stake in corner
-     Drive.turnToHeading(50,degrees); //45
+     Drive.turnToHeading(45,degrees); //45
 
 
      intake.stop();
      conveyer.stop();
+     clamp.open();
 
 
-
-
-      Drive.drive(reverse);
-      wait(1000,msec);
-      Drive.stop();
-        clamp.open();
-
-
-
-
-      Drive.drive(forward);
-      wait(750,msec);
-      Drive.stop();
-      Drive.driveFor(8,inches);   
+     Drive.setTimeout(1, seconds);
+     Drive.driveFor(reverse,15,inches);   
+     Drive.setTimeout(99, seconds);
+    
+     
+      Drive.driveFor(forward,8,inches);   
 
 
  Drive.turnToHeading(180,degrees);
-  Drive.driveFor(reverse,50,inches);
+  Drive.driveFor(reverse,55,inches);
 
 
  Drive.turnToHeading(215,degrees);
-  Drive.driveFor(reverse,60,inches);
+  Drive.driveFor(reverse,68,inches);
 
 
  Drive.turnToHeading(130,degrees);
+
+
+  Drive.setTimeout(3, seconds);
  Drive.driveFor(reverse,80,inches);
+  Drive.setTimeout(99, seconds);
 
 
  Drive.driveFor(forward,40,inches);
@@ -821,15 +799,10 @@ if (type==4)
  Drive.driveFor(reverse,200,inches);
 
 
-
-
      //Initialize for next attempt
      Drive.setDriveVelocity(slowdrivetrainspeed,percent);
      Drive.setTurnVelocity(slowdrivetrainspeed,percent);
      clamp.open();
-
-
-
 
 }
 if (type==5)
@@ -838,18 +811,15 @@ if (type==5)
 
    //setup
  Drive.setStopping(hold);
- Controller.Screen.print("Skills is Running");
-
-
  Drive.setDriveVelocity(100,percent);
  Drive.setTurnVelocity(100,percent);
  Drive.setTurnConstant(1.0);
  Drive.setTurnThreshold(1.0);
 
+ move(20);
+ float curving=Inertial.heading();
 
- intake.setVelocity(100,percent);
- conveyer.setVelocity(100,percent);
-
+ std::cout<<"\n"<<curving<<"\n";
 
 }
 
@@ -985,25 +955,22 @@ void ButtonRightPressed(){
 void ButtonXPressed(){
  // Opens Motor completely
   wallStake.setVelocity(80,percent);
-  wallStake.spinToPosition(160,degrees); // Might need to get tuned
+  conveyer.spinFor(reverse,15,degrees);
+  wallStake.spinToPosition(156,degrees); // Might need to get tuned
+  std::cout<<wallStake.temperature(celsius)<<"\n";
 }
 
 
 void ButtonYPressed(){
- //Opens Motor to Pick up ring
- wallStake.setVelocity(100,percent);
-   wallStake.spinToPosition(40,degrees); // Might need to get tuned
+  //Opens Motor to Pick up ring
+  wallStake.setVelocity(100,percent);
+  wallStake.spinToPosition(40,degrees); // Might need to get tuned
 }
 void ButtonBPressed(){
- //Resets Wallstake
- wallStake.setVelocity(60,percent);
- wallStake.spinToPosition(0,degrees);
-
-
+  //Resets Wallstake
+  wallStake.setVelocity(60,percent);
+  wallStake.spinToPosition(0,degrees);
 }
-
-
-
 
 //
 // Main will set up the competition functions and callbacks.
