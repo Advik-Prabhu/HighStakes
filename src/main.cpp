@@ -135,7 +135,7 @@ motor wallStake = motor(PORT2,ratio36_1);
 //Type=5 PID test, Slot 8
 
 
-int type = 4;
+int type = 0;
 
 
 
@@ -164,8 +164,8 @@ void pre_auton(void) {
 
 // All activities that occur before the competition starts
 // Example: clearing encoders, setting servo positions, ...
-Controller.Screen.print("V-25-03-03.09");
-std::cout<< "Version 25-03-03.09"<<"\n";
+Controller.Screen.print("V-25-03-14.00");
+std::cout<< "Version 25-03-14.00"<<"\n";
 
 
 
@@ -325,19 +325,33 @@ void move(float distance){
 
 
 void autonomous(void) {
+
 // ..........................................................................
 // Insert autonomous user code here.
 // ..........................................................................
-// ..........................................................................
-// Insert autonomous user code here.
-// ..........................................................................
+
 if (type==0)
 {
 
 
 
 
-//Sets Velocity
+  Drive.setDriveVelocity(100,percent);
+  intake.setVelocity(100,percent);
+  conveyer.setVelocity(100,percent);
+ Drive.setTurnVelocity(40,percent);
+ Drive.setTurnConstant(0.8);
+
+
+
+
+ Drive.turnToHeading(340,degrees);
+ Drive.driveFor(forward,10,inches);
+ wait(0.5,seconds);
+ wallStake.spinToPosition(160,degrees);
+ wallStake.spinToPosition(0,degrees);
+ Drive.driveFor(reverse,4,inches);
+ Drive.turnToHeading(335,degrees);
 
 
 
@@ -346,98 +360,27 @@ if (type==0)
 
 
 
-Drive.setDriveVelocity(60,percent);//Og 60
-intake.setVelocity(100,percent);
-conveyer.setVelocity(100,percent);
-Drive.setTurnVelocity(40,percent);//Og 40
-Drive.setTurnConstant(1.2);
-//Clamps the stake  
+ movePID(-33,0.1,200);
 
 
 
 
-
-
-
-
-Drive.turnToHeading(333,degrees);//OG 35
-Drive.driveFor(reverse,43,inches);
-// Drive.driveFor(forward,2,inches);
 
 
 
 
  clamp.close();
- Drive.driveFor(forward,3,inches);
+ Drive.turnToHeading(90,degrees);
+ intake.spin(reverse);
+ conveyer.spin(forward);
+ Drive.driveFor(forward,28,inches);
+ Drive.driveFor(reverse,5,inches);
 
 
-
-
-
-
-
-
-  //Scores Preload
-
-
-
-
-
-
-
-
-conveyer.spin(forward);
-//Scores secondary ring
-
-
-
-
-
-
-
-
- Drive.turnToHeading(280,degrees);//OG 260
-
-
-
-
- Drive.setDriveVelocity(80,percent);//Og 60
-
-
-
-
-
-
-
-
-Drive.driveFor(forward,40,inches);
-conveyer.spin(forward);
-intake.spin(reverse);
- Drive.driveFor(reverse,8,inches);
-
-
-
-
- Drive.turnToHeading(180,degrees);//OG 90
-Drive.setDriveVelocity(20,percent);//Og 60
-
-
-
-
- Drive.driveFor(forward,15,inches);//Og 17inches
-Drive.driveFor(reverse,4,inches);
-Drive.turnToHeading(155,degrees);//OG 90
-Drive.driveFor(forward,7,inches);//Og 4inches
-Drive.turnToHeading(80,degrees);
-Drive.setDriveVelocity(75,percent);
-Drive.driveFor(forward,18,inches);
-
-
-
-
-Drive.turnToHeading(100,degrees);
-
-
+ Drive.turnToHeading(270,degrees);
+ intake.stop();
+ conveyer.stop();
+ Drive.driveFor(forward,55,inches);
 
 
 
@@ -514,33 +457,33 @@ Drive.setDriveVelocity(40,percent);//OG 20 percent
 
 
 
-Drive.driveFor(reverse,29.5,inches);//Clamps middle stake aka really risky
-clamp.close();
+//   Drive.driveFor(reverse,29.5,inches);//Clamps middle stake aka really risky
+//   clamp.close();
 
 
 
 
-Drive.turnToHeading(10,degrees);
-// Drive.driveFor(forward, 5 ,inches);//New addition start
+//   Drive.turnToHeading(10,degrees);
+//   // Drive.driveFor(forward, 5 ,inches);//New addition start
+//   // clamp.open();
+//   // Drive.driveFor(reverse, 5 ,inches);//New addition end
+//   // clamp.close();
+//   Drive.setDriveVelocity(60,percent);
+
+
+
+
+// intake.spin(reverse);
+// conveyer.spin(forward);
+// Drive.driveFor(forward,15.5,inches);
+// Drive.turnToHeading(215,degrees);
 // clamp.open();
-// Drive.driveFor(reverse, 5 ,inches);//New addition end
-// clamp.close();
-Drive.setDriveVelocity(60,percent);
+// Drive.setDriveVelocity(100,percent);
 
 
 
 
-intake.spin(reverse);
-conveyer.spin(forward);
-Drive.driveFor(forward,15.5,inches);
-Drive.turnToHeading(215,degrees);
-clamp.open();
-Drive.setDriveVelocity(100,percent);
-
-
-
-
-Drive.driveFor(reverse,80,inches);
+// Drive.driveFor(reverse,80,inches);
 
 
 
@@ -558,34 +501,22 @@ if (type==2)
 {
 
 
- 
+  Drive.setDriveVelocity(100,percent);
+  intake.setVelocity(100,percent);
+  conveyer.setVelocity(100,percent);
+ Drive.setTurnVelocity(40,percent);
+ Drive.setTurnConstant(0.8);
 
 
 
 
-
-
- Drive.setDriveVelocity(100,percent);
- intake.setVelocity(100,percent);
- conveyer.setVelocity(100,percent);
-Drive.setTurnVelocity(90,percent);
-Drive.setTurnConstant(1);
-
-
-
-
-Drive.turnToHeading(20,degrees);
-Drive.driveFor(forward,10,inches);
-wallStake.spinToPosition(-160,degrees);
-wallStake.spinToPosition(0,degrees);
-Drive.driveFor(reverse,6,inches);
-
-
-// Drive.turnToHeading(220,degrees);
-// Drive.driveFor(forward,50,inches);
-
-
-// doinker.open();
+ Drive.turnToHeading(20,degrees);
+ Drive.driveFor(forward,10,inches);
+ wait(0.5,seconds);
+ wallStake.spinToPosition(160,degrees);
+ wallStake.spinToPosition(0,degrees);
+ Drive.driveFor(reverse,4,inches);
+ Drive.turnToHeading(25,degrees);
 
 
 
@@ -594,43 +525,27 @@ Drive.driveFor(reverse,6,inches);
 
 
 
-Drive.turnToHeading(90,degrees);
-Drive.driveFor(reverse,19,inches);
-Drive.turnToHeading(215,degrees);
-conveyer.spin(forward);
-intake.spin(reverse);
+ movePID(-33,0.1,200);
 
 
 
 
-Drive.driveFor(forward,35,inches);
-wait(0.7,seconds);
-
-
-conveyer.stop();
-Drive.turnToHeading(185,degrees);
-Drive.driveFor(forward,15,inches);
-
-
-// Drive.turnToHeading(135,degrees);
-// Drive.driveFor(forward,12,inches);
-// Drive.turnToHeading(230,degrees);
-// Drive.driveFor(forward,4,inches);
 
 
 
 
-doinker.open();
-Drive.driveFor(reverse,10,inches);
-Drive.turnToHeading(270,degrees);
-doinker.close();
-Drive.driveFor(reverse,25,inches);
-clamp.close();
-conveyer.spin(forward);
+ clamp.close();
+ Drive.turnToHeading(270,degrees);
+ intake.spin(reverse);
+ conveyer.spin(forward);
+ Drive.driveFor(forward,28,inches);
+ Drive.driveFor(reverse,5,inches);
 
 
-
-
+ Drive.turnToHeading(90,degrees);
+ intake.stop();
+ conveyer.stop();
+ Drive.driveFor(forward,55,inches);
 
 
 }
