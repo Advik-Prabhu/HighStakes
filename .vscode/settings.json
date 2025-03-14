@@ -5,5 +5,6 @@
 	"files.associations": {
 		"*.cpp": "cpp",
 		"iostream": "cpp"
-	}
+	},
+	"makefile.configureOnOpen": false
 }

@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
-/*    Author:       Advik Prabhu and Atharv Bagotra                                               */
+/*    Author:       Advik Prabhu and Atharv Bagotra                           */
 /*    Created:      2/3/2025, 9:07:19 PM                                      */
 /*    Description:  V5 project                                                */
 /*                                                                            */
@@ -218,7 +218,7 @@ maxSpeed=topSpeed;
 
 pController=11;
 iController=2 * ((float)dT/1000);// after normalization it is 0.04
-dController=0.3/ ((float)dT/1000);// after normalization it is 10
+dController=0.35/ ((float)dT/1000);//used to be 0.4
 
 
 
@@ -287,7 +287,7 @@ while (fabs(error)>threshold)
 
    if (tick%1==0)
    {
-     std::cout << tick << ","<< speed << "," << distanceTravel << "," << (error*pController) <<"," << (integral*iController) << "," << (derivitive*dController) << "," << angle << "\n" ;
+     std::cout << tick << ","<< speed << "," << distanceTravel << "," << (error*pController) <<"," << (integral*iController) << "," << (derivitive*dController) << "," << angle << "\n";
    }
   
  tick+=1;
@@ -328,11 +328,20 @@ void autonomous(void) {
 // ..........................................................................
 // Insert autonomous user code here.
 // ..........................................................................
+// ..........................................................................
+// Insert autonomous user code here.
+// ..........................................................................
 if (type==0)
-{ 
+{
+
+
 
 
 //Sets Velocity
+
+
+
+
 
 
 
@@ -347,9 +356,15 @@ Drive.setTurnConstant(1.2);
 
 
 
+
+
+
+
 Drive.turnToHeading(333,degrees);//OG 35
 Drive.driveFor(reverse,43,inches);
 // Drive.driveFor(forward,2,inches);
+
+
 
 
  clamp.close();
@@ -358,7 +373,15 @@ Drive.driveFor(reverse,43,inches);
 
 
 
+
+
+
+
   //Scores Preload
+
+
+
+
 
 
 
@@ -369,10 +392,20 @@ conveyer.spin(forward);
 
 
 
+
+
+
+
  Drive.turnToHeading(280,degrees);//OG 260
 
 
+
+
  Drive.setDriveVelocity(80,percent);//Og 60
+
+
+
+
 
 
 
@@ -383,8 +416,12 @@ intake.spin(reverse);
  Drive.driveFor(reverse,8,inches);
 
 
+
+
  Drive.turnToHeading(180,degrees);//OG 90
 Drive.setDriveVelocity(20,percent);//Og 60
+
+
 
 
  Drive.driveFor(forward,15,inches);//Og 17inches
@@ -396,7 +433,13 @@ Drive.setDriveVelocity(75,percent);
 Drive.driveFor(forward,18,inches);
 
 
+
+
 Drive.turnToHeading(100,degrees);
+
+
+
+
 
 
 
@@ -416,8 +459,14 @@ Drive.driveFor(reverse,16,inches);
 
 
 
+
+
+
+
 Drive.turnToHeading(30,degrees);
 Drive.setDriveVelocity(40,percent);//OG 20 percent
+
+
 
 
 Drive.driveFor(reverse,25,inches);
@@ -432,11 +481,23 @@ Drive.driveFor(reverse,25,inches);
 
 
 
+
+
+
+
+
+
 conveyer.spin(forward);
 wait(1,seconds);
 
 
+
+
 clamp.open();
+
+
+
+
 
 
 
@@ -445,12 +506,18 @@ conveyer.stop();
 Drive.driveFor(forward,12,inches);
 
 
+
+
 Drive.turnToHeading(330,degrees);//OG 48
 Drive.setDriveVelocity(40,percent);//OG 20 percent
 
 
+
+
 Drive.driveFor(reverse,29.5,inches);//Clamps middle stake aka really risky
 clamp.close();
+
+
 
 
 Drive.turnToHeading(10,degrees);
@@ -461,6 +528,8 @@ Drive.turnToHeading(10,degrees);
 Drive.setDriveVelocity(60,percent);
 
 
+
+
 intake.spin(reverse);
 conveyer.spin(forward);
 Drive.driveFor(forward,15.5,inches);
@@ -469,7 +538,15 @@ clamp.open();
 Drive.setDriveVelocity(100,percent);
 
 
+
+
 Drive.driveFor(reverse,80,inches);
+
+
+
+
+
+
 
 
 
@@ -481,72 +558,75 @@ if (type==2)
 {
 
 
-//Sets Velocity
-  Drive.setDriveVelocity(60,percent);
-  intake.setVelocity(100,percent);
-  conveyer.setVelocity(100,percent);
- Drive.setTurnVelocity(40,percent);
-Drive.setTurnConstant(0.8);
-//Clamps the stake
-Drive.driveFor(reverse,16,inches);
-
-
-
-
-  Drive.turnToHeading(330,degrees);
-  Drive.setDriveVelocity(40,percent);//OG 20 percent
-
-
-  Drive.driveFor(reverse,25,inches);
-   clamp.close();
-   //Scores Preload
-  //  Drive.driveFor(forward,5,inches);
-   wait(.5,seconds);
-     Drive.setDriveVelocity(60,percent);
+ 
 
 
 
 
 
 
-  conveyer.spin(forward);
-  wait(1,seconds);
+ Drive.setDriveVelocity(100,percent);
+ intake.setVelocity(100,percent);
+ conveyer.setVelocity(100,percent);
+Drive.setTurnVelocity(90,percent);
+Drive.setTurnConstant(1);
 
 
-clamp.open();
 
 
+Drive.turnToHeading(20,degrees);
+Drive.driveFor(forward,10,inches);
+wallStake.spinToPosition(-160,degrees);
+wallStake.spinToPosition(0,degrees);
+Drive.driveFor(reverse,6,inches);
+
+
+// Drive.turnToHeading(220,degrees);
+// Drive.driveFor(forward,50,inches);
+
+
+// doinker.open();
+
+
+
+
+
+
+
+
+Drive.turnToHeading(90,degrees);
+Drive.driveFor(reverse,19,inches);
+Drive.turnToHeading(215,degrees);
+conveyer.spin(forward);
+intake.spin(reverse);
+
+
+
+
+Drive.driveFor(forward,35,inches);
+wait(0.7,seconds);
 
 
 conveyer.stop();
-Drive.driveFor(forward,12,inches);
+Drive.turnToHeading(185,degrees);
+Drive.driveFor(forward,15,inches);
 
 
-Drive.turnToHeading(30,degrees);//OG 48
-Drive.setDriveVelocity(40,percent);//OG 20 percent
+// Drive.turnToHeading(135,degrees);
+// Drive.driveFor(forward,12,inches);
+// Drive.turnToHeading(230,degrees);
+// Drive.driveFor(forward,4,inches);
 
 
-Drive.driveFor(reverse,29,inches);
+
+
+doinker.open();
+Drive.driveFor(reverse,10,inches);
+Drive.turnToHeading(270,degrees);
+doinker.close();
+Drive.driveFor(reverse,25,inches);
 clamp.close();
-
-
-Drive.turnToHeading(0,degrees);
-// Drive.driveFor(forward, 5 ,inches);//New addition start
-// clamp.open();
-// Drive.driveFor(reverse, 5 ,inches);//New addition end
-// clamp.close();
-Drive.setDriveVelocity(60,percent);
-
-
-intake.spin(reverse);
 conveyer.spin(forward);
-Drive.driveFor(forward,14,inches);
-Drive.turnToHeading(145,degrees);
-clamp.open();
-Drive.setDriveVelocity(100,percent);
-
-
-Drive.driveFor(reverse,80,inches);
 
 
 
@@ -558,7 +638,13 @@ if (type==3)
 {
 
 
+
+
  //Sets Velocity
+
+
+
+
 
 
 
@@ -573,10 +659,18 @@ Drive.setTurnConstant(1.2);
 
 
 
+
+
+
+
  Drive.turnToHeading(28,degrees);//OG 35
  Drive.driveFor(reverse,40,inches);
   clamp.close();
    //Scores Preload
+
+
+
+
 
 
 
@@ -587,10 +681,20 @@ Drive.setTurnConstant(1.2);
 
 
 
+
+
+
+
  Drive.turnToHeading(80,degrees);//OG 90
 
 
+
+
  Drive.setDriveVelocity(100,percent);//Og 60
+
+
+
+
 
 
 
@@ -601,8 +705,12 @@ Drive.setTurnConstant(1.2);
  Drive.driveFor(reverse,8,inches);
 
 
+
+
  Drive.turnToHeading(180,degrees);//OG 90
  Drive.setDriveVelocity(20,percent);//Og 60
+
+
 
 
  Drive.driveFor(forward,15,inches);//Og 17inches
@@ -621,8 +729,8 @@ Drive.setTurnConstant(1.2);
 
 
 
-
 }
+
 if (type==4)
 {
 
@@ -702,18 +810,14 @@ if (type==4)
      move(-12);
      wait(500,msec);
 
-
      //Go back to line
      move(13);
-  
+
      //Long Stretch
      // heads 70 inches
 
-
        Drive.turnToHeading(88,degrees);
-        std::cout << Inertial.heading(degrees);
-
-
+      std::cout << Inertial.heading(degrees);
 
        movePID(-72,0.1,200);
        wait(200,msec); // helps the stake to settle down
