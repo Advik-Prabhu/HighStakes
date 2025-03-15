@@ -336,22 +336,16 @@ if (type==0)
 
 
 
-  Drive.setDriveVelocity(100,percent);
-  intake.setVelocity(100,percent);
-  conveyer.setVelocity(100,percent);
- Drive.setTurnVelocity(40,percent);
- Drive.setTurnConstant(0.8);
+ //Sets Velocity
 
 
 
-
- Drive.turnToHeading(340,degrees);
- Drive.driveFor(forward,10,inches);
- wait(0.5,seconds);
- wallStake.spinToPosition(160,degrees);
- wallStake.spinToPosition(0,degrees);
- Drive.driveFor(reverse,4,inches);
- Drive.turnToHeading(335,degrees);
+ Drive.setDriveVelocity(60,percent);//Og 60
+ intake.setVelocity(100,percent);
+ conveyer.setVelocity(100,percent);
+Drive.setTurnVelocity(40,percent);//Og 40
+Drive.setTurnConstant(1.2);
+//Clamps the stake
 
 
 
@@ -360,7 +354,10 @@ if (type==0)
 
 
 
- movePID(-33,0.1,200);
+ Drive.turnToHeading(332,degrees);//OG 35
+ Drive.driveFor(reverse,40,inches);
+  clamp.close();
+   //Scores Preload
 
 
 
@@ -369,22 +366,53 @@ if (type==0)
 
 
 
- clamp.close();
- Drive.turnToHeading(90,degrees);
- intake.spin(reverse);
  conveyer.spin(forward);
- Drive.driveFor(forward,28,inches);
- Drive.driveFor(reverse,5,inches);
+ //Scores secondary ring
 
 
- Drive.turnToHeading(270,degrees);
- intake.stop();
+
+
+
+
+
+
+ Drive.turnToHeading(280,degrees);//OG 90
+
+
+
+
+ Drive.setDriveVelocity(100,percent);//Og 60
+
+
+
+
+
+
+
+
+ Drive.driveFor(forward,43,inches);
+ conveyer.spin(forward);
+ intake.spin(reverse);
+ Drive.driveFor(reverse,8,inches);
+
+
+
+
+ Drive.turnToHeading(180,degrees);//OG 90
+ Drive.setDriveVelocity(20,percent);//Og 60
+
+
+
+
+ Drive.driveFor(forward,15,inches);//Og 17inches
+ Drive.driveFor(reverse,4,inches);
+ Drive.turnToHeading(155,degrees);//OG 90
+ Drive.driveFor(forward,7,inches);//Og 4inches
+ Drive.turnToHeading(80,degrees);
  conveyer.stop();
- Drive.driveFor(forward,55,inches);
-
-
-
-
+ intake.stop();
+ Drive.setDriveVelocity(75,percent);
+ Drive.driveFor(forward,20,inches);
 
 
  }
@@ -710,13 +738,8 @@ if (type==4)
 
      wait(2000,msec);
 
-
-    
-
-
      conveyer.stop();
-
-
+     
      //Drop stake in corner
      Drive.turnToHeading(310,degrees);
      intake.stop();
