@@ -9,13 +9,13 @@
 
 
 //Version            Description
-//v2025-02-17-01     Initalizing versioning
-//v2025-02-18-01     Created Move Selection
+//v2025-02-17-00     Initalizing versioning
+//v2025-02-18-00     Created Move Selection
 //v2025-02-18-01     Created PID Skills
 //v2025-02-18-02     Created Left Right Alignment Button
 //v2025-03-1-02      Added Wall Stakes
 //v2025-03-4-00      Improved Wall Stakes and Finished PID backside
-
+//v2025-03-15-00     Added two new autons for positive
 
 #include "vex.h"
 #include <iostream>
@@ -134,7 +134,7 @@ motor wallStake = motor(PORT2,ratio36_1);
 //Type=4 PID Skills, Slot 6
 //Type=5 PID test, Slot 8
 
-//TODO code the following
+//TODO test and download codes
 //Type=6 Blue Left without Alliance Stake, Slot ?
 //Type=7 Red Right without Alliance Stake, Slot ? 
 
@@ -910,6 +910,84 @@ if (type==5)
 
 }
 
+if (type==6)
+{
+
+
+ //Sets Velocity
+Drive.setDriveVelocity(60,percent);
+intake.setVelocity(100,percent);
+conveyer.setVelocity(100,percent);
+Drive.setTurnVelocity(40,percent);
+Drive.setTurnConstant(0.8);
+
+//Clamps the stake
+Drive.driveFor(reverse,16,inches);
+
+//wait(2500,msec);
+
+Drive.turnToHeading(30,degrees);
+Drive.setDriveVelocity(40,percent);//OG 20 percent
+
+Drive.driveFor(reverse,25,inches);
+ clamp.close();
+
+ //Scores Preload
+ //Drive.driveFor(forward,5,inches);
+
+ wait(.5,seconds);
+   Drive.setDriveVelocity(60,percent);
+
+conveyer.spin(forward);
+wait(1,seconds);
+
+clamp.open();
+
+conveyer.stop();
+Drive.driveFor(forward,12,inches);
+
+Drive.turnToHeading(330,degrees);//OG 48
+Drive.setDriveVelocity(40,percent);//OG 20 percent
+
+}
+if (type==7)
+{
+
+ //Sets Velocity
+Drive.setDriveVelocity(60,percent);
+intake.setVelocity(100,percent);
+conveyer.setVelocity(100,percent);
+Drive.setTurnVelocity(40,percent);
+Drive.setTurnConstant(0.8);
+
+//Clamps the stake
+Drive.driveFor(reverse,16,inches);
+
+//wait(2500,msec);
+
+Drive.turnToHeading(330,degrees);
+Drive.setDriveVelocity(40,percent);//OG 20 percent
+
+Drive.driveFor(reverse,25,inches);
+ clamp.close();
+
+ //Scores Preload
+ //Drive.driveFor(forward,5,inches);
+
+ wait(.5,seconds);
+   Drive.setDriveVelocity(60,percent);
+
+conveyer.spin(forward);
+wait(1,seconds);
+
+clamp.open();
+
+conveyer.stop();
+Drive.driveFor(forward,12,inches);
+
+Drive.turnToHeading(30,degrees);//OG 48
+Drive.setDriveVelocity(40,percent);//OG 20 percent
+}
 
 }
 
