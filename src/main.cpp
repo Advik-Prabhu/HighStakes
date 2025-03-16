@@ -128,14 +128,19 @@ motor wallStake = motor(PORT2,ratio36_1);
 
 
 //Type=0 Blue Right, Slot 1
-//Type=1 Blue Left, Slot 2
-//Type=2 Red Right, Slot 3
+//Type=1 Blue Left with Alliance Stake, Slot 2
+//Type=2 Red Right with Alliance Stake, Slot 3
 //Type=3 Red Left, Slot 4
 //Type=4 PID Skills, Slot 6
 //Type=5 PID test, Slot 8
 
+//TODO code the following
+//Type=6 Blue Left without Alliance Stake, Slot ?
+//Type=7 Red Right without Alliance Stake, Slot ? 
 
-int type = 0;
+
+
+int type = 2;
 
 
 
@@ -345,19 +350,12 @@ if (type==0)
  conveyer.setVelocity(100,percent);
 Drive.setTurnVelocity(40,percent);//Og 40
 Drive.setTurnConstant(1.2);
+
 //Clamps the stake
-
-
-
-
-
-
-
-
  Drive.turnToHeading(332,degrees);//OG 35
  Drive.driveFor(reverse,40,inches);
-  clamp.close();
-   //Scores Preload
+clamp.close();
+//Scores Preload
 
 
 
@@ -418,6 +416,53 @@ Drive.setTurnConstant(1.2);
  }
 if (type==1)
 {
+  Drive.setDriveVelocity(100,percent);
+  intake.setVelocity(100,percent);
+  conveyer.setVelocity(100,percent);
+ Drive.setTurnVelocity(40,percent);
+ Drive.setTurnConstant(0.8);
+
+
+
+
+ Drive.turnToHeading(340,degrees);
+ Drive.driveFor(forward,10,inches);
+ wait(0.5,seconds);
+ wallStake.spinToPosition(160,degrees);
+ wallStake.spinToPosition(0,degrees);
+ Drive.driveFor(reverse,4,inches);
+ Drive.turnToHeading(335,degrees);
+
+
+
+
+
+
+
+
+ movePID(-33,0.1,200);
+
+
+
+
+
+
+
+
+ clamp.close();
+ Drive.turnToHeading(90,degrees);
+ intake.spin(reverse);
+ conveyer.spin(forward);
+ Drive.driveFor(forward,28,inches);
+ Drive.driveFor(reverse,5,inches);
+
+
+ Drive.turnToHeading(270,degrees);
+ intake.stop();
+ conveyer.stop();
+ Drive.driveFor(forward,55,inches);
+
+  /*
 //Sets Velocity
 Drive.setDriveVelocity(60,percent);
 intake.setVelocity(100,percent);
@@ -430,7 +475,7 @@ Drive.driveFor(reverse,16,inches);
 
 
 
-
+//wait(2500,msec);
 
 
 
@@ -516,7 +561,7 @@ Drive.setDriveVelocity(40,percent);//OG 20 percent
 
 
 
-
+*/
 
 
 
@@ -739,7 +784,7 @@ if (type==4)
      wait(2000,msec);
 
      conveyer.stop();
-     
+
      //Drop stake in corner
      Drive.turnToHeading(310,degrees);
      intake.stop();
@@ -823,10 +868,10 @@ if (type==4)
 
 
  Drive.turnToHeading(215,degrees);
-  Drive.driveFor(reverse,68,inches);
+  Drive.driveFor(reverse,72,inches);
 
 
- Drive.turnToHeading(130,degrees);
+ Drive.turnToHeading(120,degrees);
 
 
   Drive.setTimeout(3, seconds);
