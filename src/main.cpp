@@ -16,6 +16,8 @@
 //v2025-03-1-02      Added Wall Stakes
 //v2025-03-4-00      Improved Wall Stakes and Finished PID backside
 //v2025-03-15-00     Added two new autons for positive
+//v2025-04-5-00      Fixed Drivetrain 6 motors
+//v2025-04-6-00      Added Motor Temp Readings
 
 #include "vex.h"
 #include <iostream>
@@ -78,20 +80,20 @@ int dT =20;
 
 
 // define your global instances of motors and other devices here
-motor Frontleftmotor = motor(PORT11, false);//Updated
-motor Frontrightmotor = motor(PORT15, true);//Updated
-//motor Backleftmotor = motor(PORT16, false);//Updated
-//motor Backrightmotor = motor(PORT14, true);//Updated
-motor Middleleftmotor= motor(PORT13, false); //Updated
-motor Middlerightmotor= motor(PORT20, true);//Updated
+motor Frontleftmotor = motor(PORT11,ratio6_1,true);//Updated
+motor Frontrightmotor = motor(PORT15,ratio6_1);//Updated
+motor Middleleftmotor= motor(PORT13,ratio6_1,true); //Updated
+motor Middlerightmotor= motor(PORT17,ratio6_1);//Updated
+motor Backleftmotor = motor(PORT16,ratio6_1,true);//Updated
+motor Backrightmotor = motor(PORT18,ratio6_1);//Updated
 
 
 
 
-//motor_group LeftMotors {Frontleftmotor, Backleftmotor,Middleleftmotor };
-//motor_group RightMotors { Frontrightmotor, Backrightmotor,Middlerightmotor };
-motor_group LeftMotors {Frontleftmotor,Middleleftmotor };
-motor_group RightMotors { Frontrightmotor,Middlerightmotor };
+motor_group LeftMotors {Frontleftmotor, Backleftmotor,Middleleftmotor };
+motor_group RightMotors { Frontrightmotor, Backrightmotor,Middlerightmotor };
+//motor_group LeftMotors {Frontleftmotor,Middleleftmotor };
+//motor_group RightMotors { Frontrightmotor,Middlerightmotor };
 
 
 
@@ -133,14 +135,12 @@ motor wallStake = motor(PORT2,ratio36_1);
 //Type=3 Red Left, Slot 4
 //Type=4 PID Skills, Slot 6
 //Type=5 PID test, Slot 8
-
-//TODO test and download codes
-//Type=6 Blue Left without Alliance Stake, Slot ?
-//Type=7 Red Right without Alliance Stake, Slot ? 
+//Type=6 Blue Left without Alliance Stake, Slot 5
+//Type=7 Red Right without Alliance Stake, Slot 7 
 
 
 
-int type = 2;
+int type = 0;
 
 
 
@@ -181,6 +181,14 @@ wallStake.setVelocity(100,percent);
 wallStake.setStopping(hold);
 
 
+Drive.setStopping(coast);
+// Set the drivetrain to drive at a velocity of 200 rpm.
+Drive.setDriveVelocity(10,rpm);
+
+
+
+
+
 clamp.open();
 doinker.close();
 
@@ -199,6 +207,9 @@ Brain.Screen.newLine();
 Inertial.setHeading(0,degrees);
 Controller.Screen.print("Calibrated");
 Brain.Screen.print("Calibrated");
+
+
+
 }
 
 
@@ -219,7 +230,7 @@ maxSpeed=topSpeed;
 
 
 
-
+//11,2,0.35
 
 pController=11;
 iController=2 * ((float)dT/1000);// after normalization it is 0.04
@@ -307,7 +318,7 @@ Drive.stop();
 void move(float distance){
  if (PID)
  {
-   movePID(distance,0.1,170);
+   movePID(distance,0.1,200);
  }
  else
  {
@@ -863,8 +874,8 @@ if (type==4)
       Drive.driveFor(forward,8,inches);   
 
 
- Drive.turnToHeading(180,degrees);
-  Drive.driveFor(reverse,55,inches);
+ Drive.turnToHeading(0,degrees);
+  Drive.driveFor(forward,55,inches);
 
 
  Drive.turnToHeading(215,degrees);
@@ -882,8 +893,10 @@ if (type==4)
  Drive.driveFor(forward,40,inches);
 
 
- Drive.turnToHeading(240,degrees);
+ Drive.turnToHeading(260,degrees);
+ Drive.setTimeout(3, seconds);
  Drive.driveFor(reverse,200,inches);
+ Drive.driveFor(forward,1000,inches);
 
 
      //Initialize for next attempt
@@ -1136,6 +1149,35 @@ void ButtonBPressed(){
   wallStake.setVelocity(60,percent);
   wallStake.spinToPosition(0,degrees);
 }
+void ButtonAPressed(){
+//Prints Motor Temps
+Brain.Screen.print("Frontleftmotor : ");
+Brain.Screen.print(Frontleftmotor.temperature(celsius));
+Brain.Screen.newLine();
+
+Brain.Screen.print("Frontrightmotor : ");
+Brain.Screen.print(Frontrightmotor.temperature(celsius));
+Brain.Screen.newLine();
+
+Brain.Screen.print("Middleleftmotor : ");
+Brain.Screen.print(Middleleftmotor.temperature(celsius));
+Brain.Screen.newLine();
+
+Brain.Screen.print("Middlerightmotor : ");
+Brain.Screen.print(Middlerightmotor.temperature(celsius));
+Brain.Screen.newLine();
+
+Brain.Screen.print("Backleftmotor : ");
+Brain.Screen.print(Backleftmotor.temperature(celsius));
+Brain.Screen.newLine();
+
+Brain.Screen.print("Backrightmotor : ");
+Brain.Screen.print(Backrightmotor.temperature(celsius));
+Brain.Screen.newLine();
+
+}
+
+
 
 //
 // Main will set up the competition functions and callbacks.
@@ -1148,16 +1190,21 @@ int main() {
 
 Competition.autonomous(autonomous); //initializes Auton
 Competition.drivercontrol(usercontrol); //initializes Driver Control
+
 Controller.ButtonR1.pressed(ButtonR1Pressed);// Forward (Intake + Conveyer)
 Controller.ButtonR1.released(StopButtonR1);//Stop (Intake + Conveyer)
 Controller.ButtonR2.pressed(ButtonR2Pressed);// Reverse (Conveyer + Intake)
 Controller.ButtonR2.released(StopButtonR2);//Stop (Conveyer + Intake)
+
 Controller.ButtonUp.pressed(ButtonUpPressed); //Doinker Open/Close
+
 Controller.ButtonL1.pressed(ButtonL1Pressed);//Clamp Close
 Controller.ButtonL2.pressed(ButtonL2Pressed);// Clamp Open
+
 Controller.ButtonLeft.pressed (ButtonLeftPressed); //Aligns the Robot left
 Controller.ButtonRight.pressed (ButtonRightPressed); //Aligns the robot right
 
+Controller.ButtonA.pressed (ButtonAPressed); //Reads the Motot Temperature
 
 Controller.ButtonX.pressed(ButtonXPressed); //Scores Wallstake
 Controller.ButtonY.pressed(ButtonYPressed); //Get Ready to Score Wallstake
