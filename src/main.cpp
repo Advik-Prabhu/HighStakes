@@ -1108,28 +1108,6 @@ void ButtonUpPressed()
 }
 
 
-
-
-
-
-void ButtonLeftPressed(){
- Drive.setTurnVelocity(40,percent);
- Drive.setTurnConstant(0.8);
- controllerMove=false;
- Drive.turnToHeading(270,degrees); 
- controllerMove=true;
-}
-
-
-void ButtonRightPressed(){
- Drive.setTurnVelocity(40,percent);
- Drive.setTurnConstant(0.8);
- controllerMove=false;
- Drive.turnToHeading(90,degrees); 
- controllerMove=true;
-}
-
-
 void ButtonXPressed(){
  // Opens Motor completely
   wallStake.setVelocity(80,percent);
@@ -1142,7 +1120,7 @@ void ButtonXPressed(){
 void ButtonYPressed(){
   //Opens Motor to Pick up ring
   wallStake.setVelocity(100,percent);
-  wallStake.spinToPosition(40,degrees); // Might need to get tuned
+  wallStake.spinToPosition(34,degrees); // Might need to get tuned
 }
 void ButtonBPressed(){
   //Resets Wallstake
@@ -1200,9 +1178,6 @@ Controller.ButtonUp.pressed(ButtonUpPressed); //Doinker Open/Close
 
 Controller.ButtonL1.pressed(ButtonL1Pressed);//Clamp Close
 Controller.ButtonL2.pressed(ButtonL2Pressed);// Clamp Open
-
-Controller.ButtonLeft.pressed (ButtonLeftPressed); //Aligns the Robot left
-Controller.ButtonRight.pressed (ButtonRightPressed); //Aligns the robot right
 
 Controller.ButtonA.pressed (ButtonAPressed); //Reads the Motot Temperature
 
