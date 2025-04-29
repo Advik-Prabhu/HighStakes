@@ -18,7 +18,7 @@
 //v2025-03-15-00     Added two new autons for positive
 //v2025-04-5-00      Fixed Drivetrain 6 motors
 //v2025-04-6-00      Added Motor Temp Readings
-
+//v2025-04-29-00     Fixed Negative Side Autons
 #include "vex.h"
 #include <iostream>
 using namespace vex;
@@ -36,18 +36,8 @@ competition Competition;
 brain Brain;
 controller Controller = controller(primary);
 
-
-
-
-
-
-
-
 //const float PI=M_PI;
 const float PI=3.142;
-
-
-
 
 const float Wheeldiameter=88.9;
 const float WheelCircumfrence=Wheeldiameter*PI;
@@ -55,29 +45,18 @@ const float wheelTravel=8.635;
 const float trackwidth=355.6;
 const float wheelbase=203.2;
 
-
-
-
 int drivetrainspeed=100;
 int slowdrivetrainspeed=70;
 int fastdrivetrainspeed=100;
-
-
-
 
 bool controllerMove = true;
 bool doinkerOpen = false;
 bool PID =true;
 
-
 float pController,iController,integral,dController,derivitive,targetDistance,prevError,error,threshold,distanceTravel;
-
-
-
 
 int tick,maxSpeed,speed;
 int dT =20;
-
 
 // define your global instances of motors and other devices here
 motor Frontleftmotor = motor(PORT11,ratio6_1,true);//Updated
@@ -87,46 +66,25 @@ motor Middlerightmotor= motor(PORT17,ratio6_1);//Updated
 motor Backleftmotor = motor(PORT16,ratio6_1,true);//Updated
 motor Backrightmotor = motor(PORT18,ratio6_1);//Updated
 
-
-
-
 motor_group LeftMotors {Frontleftmotor, Backleftmotor,Middleleftmotor };
 motor_group RightMotors { Frontrightmotor, Backrightmotor,Middlerightmotor };
 //motor_group LeftMotors {Frontleftmotor,Middleleftmotor };
 //motor_group RightMotors { Frontrightmotor,Middlerightmotor };
 
-
-
-
 inertial Inertial = inertial(PORT14,right);
 
-
-
-
 smartdrive Drive = smartdrive(LeftMotors, RightMotors,Inertial,WheelCircumfrence,trackwidth,wheelbase, mm,1.0);
-
-
-
 
 motor conveyer = motor(PORT19,false);//Updated
 motor intake = motor(PORT12,ratio6_1); //Updated
 
-
-
-
 pneumatics clamp = pneumatics(Brain.ThreeWirePort.H);
 pneumatics doinker = pneumatics(Brain.ThreeWirePort.G);
-
-
-
 
 // Construct a Rotation Sensor for the odometry
 rotation Rotation = rotation(PORT20, true);
 
-
 motor wallStake = motor(PORT2,ratio36_1);
-
-
 
 //Type   Color/Side  Slot
 //Type=0 Blue Right, Slot 1
@@ -139,8 +97,6 @@ motor wallStake = motor(PORT2,ratio36_1);
 //Type=7 Red Right without Alliance Stake, Slot 7 
 
 int type =7;
-
-
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -155,38 +111,26 @@ int type =7;
 
 
 
+
+
 void pre_auton(void) {
-
-
-
 
 // All activities that occur before the competition starts
 // Example: clearing encoders, setting servo positions, ...
 Controller.Screen.print("V-25-03-14.00");
 std::cout<< "Version 25-03-14.00"<<"\n";
 
-
-
-
 conveyer.setVelocity(100,percent);
 intake.setVelocity(100,percent);
 wallStake.setVelocity(100,percent);
 wallStake.setStopping(hold);
 
-
 Drive.setStopping(coast);
 // Set the drivetrain to drive at a velocity of 200 rpm.
 Drive.setDriveVelocity(10,rpm);
 
-
-
-
-
 clamp.close();
 doinker.close();
-
-
-
 
 // Start calibration.
 Inertial.calibrate();
@@ -201,27 +145,16 @@ Inertial.setHeading(0,degrees);
 Controller.Screen.print("Calibrated");
 Brain.Screen.print("Calibrated");
 
-
-
 }
-
-
-
-
-
 
 void movePID(float distance, float accuracy, int topSpeed){
 
-
 Rotation.resetPosition();
-
 
 speed=integral=derivitive=distanceTravel=0;
 prevError=error=targetDistance = distance;
 threshold=accuracy;
 maxSpeed=topSpeed;
-
-
 
 //11,2,0.35
 
@@ -229,14 +162,12 @@ pController=11;
 iController=2 * ((float)dT/1000);// after normalization it is 0.04
 dController=0.35/ ((float)dT/1000);//used to be 0.4
 
-
 std::cout<<"Debug Code \n";
 std::cout<<"speed: "<<speed<<integral<<derivitive<<distanceTravel<<"\n";
 std::cout<< "error/distance: "<<prevError<<error<<targetDistance<<distance<<"\n";
 std::cout<<"threshold: "<<threshold<<"\n";
 std::cout<<"max speed: "<<maxSpeed<<"\n";
 std::cout<<"PID begin"<<"\n";
-
 
 while (fabs(error)>threshold)
 {
@@ -812,14 +743,10 @@ while (1) {
   // values based on feedback from the joysticks.
 
 
-
-
   // ........................................................................
   // Insert user code here. This is where you use the joystick values to
   // update your motors, etc.
   // ........................................................................
-
-
 
 
   if(controllerMove){
@@ -831,11 +758,6 @@ while (1) {
                   // prevent wasted resources.
 }
 }
-
-
-
-
-
 
 void ButtonR1Pressed (){
 conveyer.spin(forward);
@@ -940,15 +862,11 @@ Brain.Screen.newLine();
 }
 
 
-
 //
 // Main will set up the competition functions and callbacks.
 //
 int main() {
 // Set up callbacks for autonomous and driver control periods.
-
-
-
 
 Competition.autonomous(autonomous); //initializes Auton
 Competition.drivercontrol(usercontrol); //initializes Driver Control
