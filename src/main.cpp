@@ -15,6 +15,7 @@
 //v2025-02-18-02     Created Left Right Alignment Button
 //v2025-03-1-02      Added Wall Stakes
 //v2025-03-4-00      Improved Wall Stakes and Finished PID backside
+//v2025-03-14-00     ITS PI day !!! 3.1415926535 ...
 //v2025-03-15-00     Added two new autons for positive
 //v2025-04-5-00      Fixed Drivetrain 6 motors
 //v2025-04-6-00      Added Motor Temp Readings
@@ -95,8 +96,11 @@ motor wallStake = motor(PORT2,ratio36_1);
 //Type=5 PID test, Slot 8
 //Type=6 Blue Left without Alliance Stake, Slot 5
 //Type=7 Red Right without Alliance Stake, Slot 7 
-
-int type =7;
+//Type=8 Red Right Goal Rush, Slot 8 
+//Type=9 
+//Type=10 
+//Type=11
+int type = 4;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -117,8 +121,8 @@ void pre_auton(void) {
 
 // All activities that occur before the competition starts
 // Example: clearing encoders, setting servo positions, ...
-Controller.Screen.print("V-25-03-14.00");
-std::cout<< "Version 25-03-14.00"<<"\n";
+Controller.Screen.print("V-25-04-29.00");
+std::cout<< "Version 25-04-29.00"<<"\n";
 
 conveyer.setVelocity(100,percent);
 intake.setVelocity(100,percent);
@@ -126,8 +130,8 @@ wallStake.setVelocity(100,percent);
 wallStake.setStopping(hold);
 
 Drive.setStopping(coast);
-// Set the drivetrain to drive at a velocity of 200 rpm.
-Drive.setDriveVelocity(10,rpm);
+// Set the drivetrain to drive at a velocity of 600 rpm.
+Drive.setDriveVelocity(600,rpm);
 
 clamp.close();
 doinker.close();
@@ -312,69 +316,69 @@ clamp.open();
 }
 if (type==1)
 {
-
   Drive.setDriveVelocity(34,percent);
   intake.setVelocity(100,percent);
   conveyer.setVelocity(100,percent);
- Drive.setTurnVelocity(40,percent);
- Drive.setTurnConstant(0.8);
- clamp.close();
-
-
-
- Drive.turnToHeading(340,degrees);
- Drive.driveFor(forward,10,inches);
-
- wait(0.5,seconds);
- wallStake.spinToPosition(160,degrees);
- wallStake.spinToPosition(0,degrees);
- Drive.driveFor(reverse,4,inches);
- Drive.turnToHeading(337,degrees); //OG 25
-
-
- movePID(-35,0.1,250); //OG -33,0.1,200
- clamp.open();
-
- Drive.turnToHeading(90,degrees);
-
- intake.spin(reverse);
- conveyer.spin(forward);
-
- Drive.driveFor(forward,30,inches);
- wait(0.5,sec);
-
- Drive.turnToHeading(270,degrees);
- Drive.driveFor(forward,56,inches);
- intake.stop();
- conveyer.stop();
-
-
+  Drive.setTurnVelocity(40,percent);
+  Drive.setTurnConstant(0.8);
+  clamp.close();
+ 
+ 
+  Drive.turnToHeading(329,degrees); //OG 30
+  movePID(5.5,0.05,250);
+ 
+  wait(0.5,seconds);
+ 
+  wallStake.spinToPosition(160,degrees);
+  wallStake.spinToPosition(0,degrees);
+  Drive.driveFor(reverse,4,inches);
+ 
+  Drive.turnToHeading(335,degrees); //OG 25
+ 
+ 
+  movePID(-39,0.1,500); //OG -35,0.1,250
+  clamp.open();
+ 
+  Drive.turnToHeading(90,degrees);
+ 
+  intake.spin(reverse);
+  conveyer.spin(forward);
+ 
+  movePID(16,0.1,600);
+  wait(0.5,sec);
+ 
+ 
+  Drive.turnToHeading(270,degrees);
+  intake.stop();
+  movePID(100,85,600);
+  conveyer.stop();
 
 }
 if (type==2)
 {
 
 
-  Drive.setDriveVelocity(34,percent);
-  intake.setVelocity(100,percent);
-  conveyer.setVelocity(100,percent);
+ Drive.setDriveVelocity(34,percent);
+ intake.setVelocity(100,percent);
+ conveyer.setVelocity(100,percent);
  Drive.setTurnVelocity(40,percent);
  Drive.setTurnConstant(0.8);
  clamp.close();
 
 
-
- Drive.turnToHeading(20,degrees);
- Drive.driveFor(forward,10,inches);
+ Drive.turnToHeading(31,degrees); //OG 30
+ movePID(5.5,0.05,250);
 
  wait(0.5,seconds);
+
  wallStake.spinToPosition(160,degrees);
  wallStake.spinToPosition(0,degrees);
  Drive.driveFor(reverse,4,inches);
- Drive.turnToHeading(23,degrees); //OG 25
+
+ Drive.turnToHeading(25,degrees); //OG 25
 
 
- movePID(-35,0.1,250); //OG -33,0.1,200
+ movePID(-39,0.1,500); //OG -35,0.1,250
  clamp.open();
 
  Drive.turnToHeading(270,degrees);
@@ -382,12 +386,13 @@ if (type==2)
  intake.spin(reverse);
  conveyer.spin(forward);
 
- Drive.driveFor(forward,30,inches);
+ movePID(16,0.1,600);
  wait(0.5,sec);
 
+
  Drive.turnToHeading(90,degrees);
- Drive.driveFor(forward,56,inches);
  intake.stop();
+ movePID(100,85,600);
  conveyer.stop();
 
 }
@@ -439,6 +444,7 @@ clamp.open();
  Drive.driveFor(forward,15,inches);
  Drive.turnToHeading(280,degrees);
  Drive.driveFor(forward,50,inches);
+ 
 
 }
 
@@ -451,10 +457,9 @@ if (type==4)
  Drive.setStopping(hold);
  Controller.Screen.print("Skills is Running");
 
- Drive.setDriveVelocity(100,percent);
- Drive.setTurnVelocity(90,percent);
- Drive.setTurnConstant(1.0);
- Drive.setTurnThreshold(1.0);
+ Drive.setDriveVelocity(50,percent);
+ Drive.setTurnVelocity(40,percent);
+ Drive.setTurnConstant(0.8);
 
  intake.setVelocity(100,percent);
  conveyer.setVelocity(100,percent);
@@ -467,13 +472,14 @@ if (type==4)
  conveyer.stop();
 
  //Go to stake
- move(10);
- Drive.turnToHeading(270,degrees);
- move(-21);
+ movePID(10,0.1,200);
+ Drive.turnToHeading(270,degrees);//OG 270
+ movePID(-30,0.1,200);
 
  //Clamp Stake
- clamp.open();
- Drive.driveFor(reverse,2,inches,true);
+ clamp.open(); 
+ movePID(8,0.1,200);
+
 
  //Get ready to score
  Drive.turnToHeading(0,degrees);
@@ -481,14 +487,14 @@ if (type==4)
  conveyer.spin(forward);
 
      //Score 4 rings
-     Drive.turnToHeading(0,degrees);
-      move(24);
+     Drive.turnToHeading(0,degrees);//OG 0 
+     movePID(24,0.1,200);//OG 24
 
-     Drive.turnToHeading(90,degrees);
-
-     move(21.5);
-     Drive.turnToHeading(180,degrees);
-     move(26);
+     Drive.turnToHeading(90,degrees);//OG 90
+     movePID(23.5,0.1,200);
+     
+     Drive.turnToHeading(180,degrees); //OG 180
+     movePID(26,0.1,200);
 
      wait(2000,msec);
 
@@ -499,19 +505,20 @@ if (type==4)
      intake.stop();
      Drive.driveFor(forward,2,inches);
      clamp.close();
-     move(-12);
+     movePID(-12,0.1,200);
      wait(500,msec);
 
      //Go back to line
-     move(13);
+     movePID(13,0.1,200);
 
      //Long Stretch
-     // heads 70 inches
+     //heads 70 inches
 
        Drive.turnToHeading(88,degrees);
       std::cout << Inertial.heading(degrees);
 
-       movePID(-72,0.1,200);
+       movePID(-76,0.1,300);
+       movePID(4,0.1,200);
        wait(200,msec); // helps the stake to settle down
      /*
       Drive.turnToHeading(89,degrees);//Should be 90 but has been tuned at 2/21
@@ -544,15 +551,15 @@ if (type==4)
 
      //Score 4 rings
      Drive.turnToHeading(0,degrees);
-     move(22); //used to be 24
+     movePID(22,0.1,200); //used to be 24
 
 
      Drive.turnToHeading(270,degrees);
-     move(21.5);//used to be 24
+     movePID(21.5,0.1,200);//used to be 24
 
 
      Drive.turnToHeading(179,degrees);
-     move(30);
+     movePID(30,0.1,200);
 
 
      //Drop stake in corner
@@ -637,10 +644,10 @@ if (type==6)
  
  //wait(2500,msec);
  
- Drive.turnToHeading(30,degrees);
+ Drive.turnToHeading(32,degrees);
  Drive.setDriveVelocity(20,percent);//OG 20 percent
- 
- Drive.driveFor(reverse,26,inches);
+
+ movePID(-19,1.1,300);
   clamp.open();
  
   //Scores Preload
@@ -660,8 +667,8 @@ if (type==6)
  
  
  Drive.setDriveVelocity(10,percent);
- Drive.turnToHeading(145,degrees);//OG 48
- Drive.driveFor(forward,17,inches);
+ Drive.turnToHeading(137,degrees);//OG 48
+ Drive.driveFor(forward,25,inches);
  
  wait(4,seconds);
  conveyer.stop();
@@ -707,8 +714,8 @@ conveyer.spin(forward);
 
 
 Drive.setDriveVelocity(10,percent);
-Drive.turnToHeading(215,degrees);//OG 48
-Drive.driveFor(forward,17,inches);
+Drive.turnToHeading(220,degrees);//OG 48
+Drive.driveFor(forward,25,inches);
 
 wait(4,seconds);
 conveyer.stop();
@@ -716,7 +723,9 @@ intake.stop();
 
 Drive.setDriveVelocity(100,percent);//OG 20 percent
 }
+if(type==8){
 
+}
 }
 
 
@@ -737,6 +746,20 @@ Drive.setDriveVelocity(100,percent);//OG 20 percent
 
 void usercontrol(void) {
 // User control code here, inside the loop
+
+conveyer.setVelocity(100,percent);
+intake.setVelocity(100,percent);
+wallStake.setVelocity(100,percent);
+wallStake.setStopping(hold);
+
+Drive.setStopping(coast);
+// Set the drivetrain to drive at a velocity of 600 rpm.
+Drive.setDriveVelocity(600,rpm);
+
+doinker.close();
+
+
+
 while (1) {
   // This is the main execution loop for the user control program.
   // Each time through the loop your program should update motor + servo
