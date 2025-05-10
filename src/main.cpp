@@ -100,7 +100,7 @@ motor wallStake = motor(PORT2,ratio36_1);
 //Type=9 
 //Type=10 
 //Type=11
-int type = 4;
+int type = 1;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -344,9 +344,9 @@ if (type==1)
   intake.spin(reverse);
   conveyer.spin(forward);
  
-  movePID(16,0.1,600);
-  wait(0.5,sec);
- 
+  movePID(21,0.1,600);//og 16
+  wait(1,sec);
+  movePID(-10,5,600);//Not necassery if earlier move == OG
  
   Drive.turnToHeading(270,degrees);
   intake.stop();
@@ -452,7 +452,7 @@ if (type==4)
 {
  //wait for gyro initialization
  //wait(5000,msec);
-
+ Inertial.setHeading(180,degrees);
  //setup
  Drive.setStopping(hold);
  Controller.Screen.print("Skills is Running");
@@ -466,19 +466,20 @@ if (type==4)
  clamp.close();
 
  //score preload on alliance
-
- conveyer.spin(forward);
- wait(1000,msec);
- conveyer.stop();
+ Drive.setDriveVelocity(30,percent);
+ Drive.driveFor(reverse,3,inches);
+ wallStake.spinToPosition(156,degrees);
+ wallStake.spinToPosition(0,degrees);
+ Drive.setDriveVelocity(50,percent);
 
  //Go to stake
- movePID(10,0.1,200);
+ movePID(-5,0.1,200);
  Drive.turnToHeading(270,degrees);//OG 270
- movePID(-30,0.1,200);
+ movePID(-27,0.1,250);//OG 26
 
  //Clamp Stake
  clamp.open(); 
- movePID(8,0.1,200);
+ movePID(9,0.1,200);//OG
 
 
  //Get ready to score
@@ -498,26 +499,27 @@ if (type==4)
 
      wait(2000,msec);
 
-     conveyer.stop();
 
      //Drop stake in corner
      Drive.turnToHeading(310,degrees);
      intake.stop();
+     conveyer.stop();
      Drive.driveFor(forward,2,inches);
      clamp.close();
      movePID(-12,0.1,200);
      wait(500,msec);
 
      //Go back to line
-     movePID(13,0.1,200);
+     movePID(18,0.1,200);//OG 13
 
      //Long Stretch
      //heads 70 inches
 
-       Drive.turnToHeading(88,degrees);
+       Drive.turnToHeading(89,degrees);//OG 88
       std::cout << Inertial.heading(degrees);
 
-       movePID(-76,0.1,300);
+       movePID(-75,0.1,300);
+       clamp.open();
        movePID(4,0.1,200);
        wait(200,msec); // helps the stake to settle down
      /*
@@ -536,8 +538,6 @@ if (type==4)
 
 
      //Clamp Stake
-     clamp.open();
-
 
      Drive.driveFor(forward,4,inches,true);
 
@@ -773,7 +773,7 @@ while (1) {
 
 
   if(controllerMove){
-    Drive.arcade(Controller.Axis3.value()*drivetrainspeed/100,Controller.Axis1.value()*drivetrainspeed/100);
+    Drive.arcade(Controller.Axis3.value()*drivetrainspeed/100,Controller.Axis1.value()*drivetrainspeed/200);
   }
 
 
