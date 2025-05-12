@@ -668,7 +668,7 @@ if (type==6)
  
  Drive.setDriveVelocity(10,percent);
  Drive.turnToHeading(137,degrees);//OG 48
- Drive.driveFor(forward,25,inches);
+ movePID(16,0.1,600);
  
  wait(4,seconds);
  conveyer.stop();
